@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" href="styles.css">
+
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+    <title>Document</title>
+</head>
+<body>
+
+    
+    <div id="react-app"></div>
+
+
+    
+</body>
+
+    <script type="text/babel">
+
+
+
+        let names = [
+            'one.jpg',
+            'two.jpg',
+            'three.jpg',
+            'four.jpg',
+            'five.jpg',
+        ];
+
+
+        class ThumbnailWrapper extends React.Component {
+            constructor(props){
+                super(props);
+
+                this.state = {
+                    activeNameId: null
+                }
+
+                this.clickHandle = this.clickHandle.bind(this);
+            }
+
+            clickHandle(){
+                console.log('in click handle');
+                console.log('this in clickHandle is: ', this);
+                const {names} = this.props;
+                console.log('names is: ', names);
+                let length = names.length;
+                let randomNum = getRandomInt(length);
+
+                this.setState({
+                    activeNameId: randomNum
+                });
+            }
+
+            render() {
+
+                const {activeNameId} = this.state;
+
+                console.log('this in render ', this);
+
+                return(
+                    <div>
+                        <div className="thumbnail-wrapper">
+                            <figure>
+                                <img src="test.jpg" alt="test image" />
+                            </figure>
+                            <figcaption>
+                                <ul>
+                                    <li>Internal Use</li>
+                                    <li>React Tutorial</li>
+                                    <li>{this.props.names[activeNameId]}</li>
+                                    <li>6373 KB</li>
+                                </ul>
+                            </figcaption>
+                        </div>
+                        <Button clickHandler={this.clickHandle}/>
+                    </div>
+                )
+            }
+        }
+
+
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+        }
+
+
+
+        function Button(props){
+            return(
+                <button onClick={props.clickHandler}>Click</button>
+            )
+        }
+
+
+
+        ReactDOM.render(
+            <ThumbnailWrapper names={names}/>,
+            document.getElementById('react-app')
+        )
+
+
+
+    
+    
+    </script>
+
+</html>

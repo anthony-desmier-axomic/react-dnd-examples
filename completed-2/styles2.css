@@ -1,0 +1,59 @@
+.thumbnail-wrapper {
+    display: flex;
+    border: 1px solid blue;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+
+.thumbnail-item {
+    border: 1px solid #333;
+    border-radius: 4px;
+    margin: 0px 5px;
+    margin-bottom: 10px;
+    transition: transform 0.3s;
+}
+
+.thumbnail-item.rotated {
+    transform: rotate(1deg);
+    transform-origin: 100% 0%;
+    transition: transform 0.3s;
+}
+
+.thumbnail-drag-icon {
+    border: 1px solid black;
+    cursor: -webkit-grab;
+    border-radius: 4px;
+    display: none;
+    padding: 2px;
+    float: right;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+.thumbnail-drag-icon.draggable {
+    display: block;
+}
+
+.thumbnail-figure {
+    width: 70%;
+    margin: 40px auto;
+}
+
+.thumbnail-image {
+    max-width: 100%;
+}
+
+.thumbnail-caption {
+    border-top: 1px solid #333;
+    height: 100px;
+}
+
+.thumbnail-list {
+    list-style: none;
+    font-size: 90%;
+}
+
+.thumbnail-list li {
+    margin-bottom: 2px;
+}

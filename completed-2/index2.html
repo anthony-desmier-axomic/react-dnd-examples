@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" type="text/css" href="styles2.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div id="react-app" class="thumbnail-wrapper"></div>
+    
+    <!-- <div class="thumbnail-wrapper">
+        <div class="thumbnail-item">
+            <div class="thumbnail-drag-icon">O</div>
+            <figure class="thumbnail-figure">
+                <img class="thumbnail-image" src="thumb.jpg" alt="thumbnail image">
+            </figure>
+            <figcaption class="thumbnail-caption"></figcaption>
+        </div>
+        <div class="thumbnail-item">
+            <figure class="thumbnail-figure">
+                <img class="thumbnail-image" src="thumb.jpg" alt="thumbnail image">
+            </figure>
+            <figcaption class="thumbnail-caption"></figcaption>
+        </div>
+        <div class="thumbnail-item">
+            <figure class="thumbnail-figure">
+                <img class="thumbnail-image" src="thumb.jpg" alt="thumbnail image">
+            </figure>
+            <figcaption class="thumbnail-caption"></figcaption>
+        </div>
+        <div class="thumbnail-item">
+            <figure class="thumbnail-figure">
+                <img class="thumbnail-image" src="thumb.jpg" alt="thumbnail image">
+            </figure>
+            <figcaption class="thumbnail-caption"></figcaption>
+        </div>
+    </div> -->
+</body>
+
+    <script type="text/babel">
+
+
+
+        class ThumbnailItem extends React.Component {
+            constructor(props){
+                super(props);
+
+                this.state = {
+                    hovered: false,
+                    rotate: false
+                }
+
+                this.addDraggable = this.addDraggable.bind(this);
+                this.rotateItem = this.rotateItem.bind(this);
+                this.handleDragStart = this.handleDragStart.bind(this);
+            }
+
+            addDraggable() {
+                const {hovered} = this.state;
+                this.setState({
+                    hovered: !hovered
+                });
+            }
+
+            rotateItem() {
+                const {rotate} = this.state;
+                this.setState({
+                    rotate: !rotate
+                });
+            }
+
+            handleDragStart(evt) {
+                let data = JSON.stringify({ foo: 'bar' })
+                //evt.dataTransfer.setData('application/json', data)
+                evt.dataTransfer.setData('text', 'foo=bar');
+            }
+
+            render() {
+                const {hovered, rotate} = this.state;
+                const {data} = this.props;
+
+                let url = 'https:' + data.sizes[0].http_root + data.sizes[0].http_relative_path;
+
+                let thumbDragClass;
+                let thumbItemClass = 'thumbnail-item';
+
+                if(hovered){
+                    thumbDragClass = 'thumbnail-drag-icon draggable';
+                    if(rotate) {
+                        thumbItemClass += ' rotated';
+                    }
+                } else {
+                    thumbDragClass = 'thumbnail-drag-icon';
+                }
+
+                return (
+                    <div className={thumbItemClass} onMouseEnter={this.addDraggable} onMouseLeave={this.addDraggable}>
+                        <div className={thumbDragClass}
+                             onMouseEnter={this.rotateItem}
+                             onMouseLeave={this.rotateItem}
+                             draggable="true"
+                             onDragStart={(evt) => this.handleDragStart(evt)}>O</div>
+                        <figure className="thumbnail-figure">
+                            <img className="thumbnail-image" src={url} alt="thumbnail image" />
+                        </figure>
+                        <FigCaption accesslevel="Internal Use"
+                                    projectname="Goodbye"
+                                    filename="freshandwild.jpg"
+                                    size="5873" />
+                    </div>
+                )
+            }
+        }
+
+        function FigCaption(props) {
+            return(
+                <figcaption className="thumbnail-caption">
+                    <ul className="thumbnail-list">
+                        <li>{props.accesslevel}</li>
+                        <li>{props.projectname}</li>
+                        <li>{props.filename}</li>
+                        <li>{props.size} KB</li>
+                    </ul>
+                </figcaption>
+            )
+        }
+
+        class ThumbnailWrapper extends React.Component {
+            constructor(props){
+                super(props);
+                this.state = {
+                    data: null
+                }
+            }
+
+            componentDidMount() {
+                let headers = new Headers();
+                const username = 'restapi';
+                const password = 'restapi';
+                const base64 = btoa(username + ':' + password);
+        
+                headers.append('Authorization', 'Basic ' + base64)
+
+                fetch('https://demo-ade.openasset.com/REST/1/Files?sizes=2&project_id=21', {
+                    method: 'GET',
+                    headers: headers
+                })
+                .then(response => response.json())
+                .then(json => this.setState({ data: json }))
+                .catch(error => console.error('There was an error getting the data'));
+            }
+
+            render() {
+                const {data} = this.state
+                let thumbnailItems = [];
+
+                if(data){
+                    data.map((image) => thumbnailItems.push(<ThumbnailItem key={image.id} data={image} />));
+                }
+               
+                return(thumbnailItems)
+            }
+        }
+    
+
+    
+        ReactDOM.render(
+            <ThumbnailWrapper />,
+            document.getElementById('react-app')
+        );
+    
+    </script>
+
+</html>

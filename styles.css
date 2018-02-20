@@ -1,0 +1,9 @@
+.react-app {
+    display: flex;
+    //flex-direction: column;
+}
+
+.thumbnail-wrapper {
+    border: 1px solid black;
+
+}

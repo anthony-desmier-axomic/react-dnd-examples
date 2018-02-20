@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+    <title>React App</title>
+</head>
+
+<body>
+    <div id="react-app"></div>
+</body>
+
+    <script type="text/babel">
+
+        let data = [
+            {name: 'anthony', age: '30'},
+            {name: 'will', age: '33'},
+            {name: 'steve', age: '20'},
+            {name: 'chris', age: '26'}
+        ];
+    
+        function Button(props) {
+            return(<button onClick={props.clickHandler}>Click</button>)
+        }
+
+        class Name extends React.Component {
+            constructor(props){
+                super(props);
+                this.state = {
+                    data: data,
+                    active: undefined
+                }
+                this.clickHandler = this.clickHandler.bind(this);
+            }
+
+            clickHandler() {
+                console.log(this.state);
+                let numOfNames = this.state.data.length;
+                let num = getRandomInt(numOfNames);
+
+                this.setState({
+                    active: num
+                });
+            }
+
+            render(){
+                let id = this.state.active;
+                let name;
+
+                if(id){
+                    name = <div className="name">Hello {this.state.data[id].name}</div>
+                } else {
+                    name = <div className="name">Hello none</div>
+                }
+
+                return(
+                    <div id="app-wrapper">
+                        {name}
+                        <Button clickHandler={this.clickHandler} />
+                    </div>
+                )
+            }
+        }
+
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * Math.floor(max));
+        }
+
+
+        ReactDOM.render(
+            <Name />,
+            document.getElementById('react-app')
+        )
+    
+    </script>
+
+</html>
