@@ -8,6 +8,9 @@
     <link rel="stylesheet" type="text/css" href="styles2.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 
+    <!-- We include the main React library as well as ReactDOM to be able to output
+    our React components to browser. Babel is also included to transpile our ES6 code
+    into browser-readable ES5 code -->
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
@@ -17,35 +20,9 @@
 
 <body>
 
+    <!-- React entry point -->
     <div id="react-app" class="thumbnail-wrapper"></div>
-    
-    <!-- <div class="thumbnail-wrapper">
-        <div class="thumbnail-item">
-            <div class="thumbnail-drag-icon">O</div>
-            <figure class="thumbnail-figure">
-                <img class="thumbnail-image" src="thumb.jpg" alt="thumbnail image">
-            </figure>
-            <figcaption class="thumbnail-caption"></figcaption>
-        </div>
-        <div class="thumbnail-item">
-            <figure class="thumbnail-figure">
-                <img class="thumbnail-image" src="thumb.jpg" alt="thumbnail image">
-            </figure>
-            <figcaption class="thumbnail-caption"></figcaption>
-        </div>
-        <div class="thumbnail-item">
-            <figure class="thumbnail-figure">
-                <img class="thumbnail-image" src="thumb.jpg" alt="thumbnail image">
-            </figure>
-            <figcaption class="thumbnail-caption"></figcaption>
-        </div>
-        <div class="thumbnail-item">
-            <figure class="thumbnail-figure">
-                <img class="thumbnail-image" src="thumb.jpg" alt="thumbnail image">
-            </figure>
-            <figcaption class="thumbnail-caption"></figcaption>
-        </div>
-    </div> -->
+
 </body>
 
     <script type="text/babel">
@@ -82,8 +59,10 @@
 
             handleDragStart(evt) {
                 let data = JSON.stringify({ foo: 'bar' })
-                //evt.dataTransfer.setData('application/json', data)
-                evt.dataTransfer.setData('text', 'foo=bar');
+                //evt.dataTransfer.setData('text/plain', 'foo=bar');
+                //evt.dataTransfer.setData('text/uri-list', 'http://www.mozilla.org');
+                evt.dataTransfersetData("text/html", "Hello there, <strong>stranger</strong>");
+
             }
 
             render() {
@@ -137,14 +116,22 @@
         }
 
         class ThumbnailWrapper extends React.Component {
+            // (2) Constructor of ThumbnailWrapper is called to pass in any
+            // component props and initiate the state object
             constructor(props){
+                // props will get passed through this classes parent constructor
+                // (React.Component)
                 super(props);
                 this.state = {
                     data: null
                 }
             }
 
+            // (4) After ThumbnailWrapper mounts and renders for the first time,
+            // componentDidMount is called. Here we setup our API request to
+            // reteive data from OpenAsset using the browsers in-built Fetch API
             componentDidMount() {
+                // set our headers in order to be able to authenticate to OA
                 let headers = new Headers();
                 const username = 'restapi';
                 const password = 'restapi';
@@ -161,6 +148,9 @@
                 .catch(error => console.error('There was an error getting the data'));
             }
 
+            // (3) The first render of the ThumbnailWrapper component. As `data` and
+            // `thumbnailItems` will be null at this stage, nothing is rendered to
+            // the DOM
             render() {
                 const {data} = this.state
                 let thumbnailItems = [];
@@ -174,7 +164,9 @@
         }
     
 
-    
+        // (1) This gets run first. The render function will output the result of the
+        // ThumbnailWrapper component into the element on the DOM that has the ID of
+        // react-app (our entry point)
         ReactDOM.render(
             <ThumbnailWrapper />,
             document.getElementById('react-app')
