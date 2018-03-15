@@ -57,11 +57,38 @@
                 });
             }
 
-            handleDragStart(evt) {
-                let data = JSON.stringify({ foo: 'bar' })
-                //evt.dataTransfer.setData('text/plain', 'foo=bar');
+            // async fetchImage(url) {
+               
+
+                
+            //     // return (fetch(url, { method: 'GET' })
+            //     //     .then(response => response.arrayBuffer())
+            //     //     .then(buffer => new File([buffer], 'hello.jpeg', { type: 'image/jpeg' }))
+            //     //     .catch(error => console.error(error))
+            //     // );
+            // }
+
+            async handleDragStart(evt, url) {
+                let event = evt;
+                try {
+                    let response = await fetch(url);
+                    let buffer = await response.arrayBuffer();
+                    let file =  new File([buffer], 'hello.jpg', { type: 'image/jpeg' })
+                    console.log(file);
+                    event.dataTransfer.setData('text/plain', 'sdf');
+                    //evt.dataTransfer.setData('image/jpeg', file);
+                }
+                catch(error) {
+                    console.error('There was an error: ', error);
+                }
+
+
+                //console.log(evt);
+                //let file = this.fetchImage(url);
+                //let data = JSON.stringify({ foo: 'bar' })
+                //evt.dataTransfer.setData('text/plain', url);
                 //evt.dataTransfer.setData('text/uri-list', 'http://www.mozilla.org');
-                evt.dataTransfersetData("text/html", "Hello there, <strong>stranger</strong>");
+                //evt.dataTransfersetData("text/html", "Hello there, <strong>stranger</strong>");
 
             }
 
@@ -89,9 +116,9 @@
                              onMouseEnter={this.rotateItem}
                              onMouseLeave={this.rotateItem}
                              draggable="true"
-                             onDragStart={(evt) => this.handleDragStart(evt)}>O</div>
+                             onDragStart={(evt) => this.handleDragStart(evt, url)}>O</div>
                         <figure className="thumbnail-figure">
-                            <img className="thumbnail-image" src={url} alt="thumbnail image" />
+                            <img className="thumbnail-image" src={url} alt="thumbnail image" crossOrigin="anonymous" />
                         </figure>
                         <FigCaption accesslevel="Internal Use"
                                     projectname="Goodbye"
